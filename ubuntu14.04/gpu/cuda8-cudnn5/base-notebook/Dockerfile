@@ -8,7 +8,7 @@
 # ...then including opencv
 #
 # build it:
-# nvidia-docker build -t grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook https://github.com/grez72/notebooks.git#master:ubuntu14.04/gpu/cuda8-cudnn5/base-notebook
+# docker build -t grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook https://github.com/juliandefreitas/notebooks.git#master:ubuntu14.04/gpu/cuda8-cudnn5/base-notebook
 #
 # run it:
 # nvidia-docker run -it --rm -p 8888:8888 grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
@@ -95,8 +95,8 @@ RUN make -j"$(nproc)"
 # Install OpenCV
 #--------------------------------------
 
-RUN conda install opencv
-RUN /bin/bash -c "source activate python2 && conda install opencv"
+##RUN conda install opencv
+##RUN /bin/bash -c "source activate python2 && conda install opencv"
 
 #--------------------------------------
 # Packages to Enhance SciPi
@@ -110,5 +110,5 @@ RUN /bin/bash -c "source activate python2 && conda install opencv"
 # Setup for notebook use
 #--------------------------------------
 
-WORKDIR /home/$NB_USER/work/
-USER $NB_USER
+##WORKDIR /home/$NB_USER/work/
+##USER $NB_USER
