@@ -645,7 +645,7 @@ RUN conda uninstall -y ffmpeg \
 
 USER root
 
-pip install opencv-python
+RUN pip install opencv-python
 
 # why this setting?:
 # -D BUILD_opencv_dnn=OFF \
