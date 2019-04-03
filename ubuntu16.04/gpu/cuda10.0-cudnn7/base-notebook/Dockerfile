@@ -640,7 +640,9 @@ WORKDIR ~/
 RUN conda uninstall -y ffmpeg \
   && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
 
-#RUN git clone https://github.com/Itseez/opencv.git \
+USER root
+
+##RUN git clone https://github.com/Itseez/opencv.git \
 #  && cd opencv \
 #  && git checkout tags/3.4.3 \
 #  && mkdir build \
@@ -668,7 +670,7 @@ RUN conda uninstall -y ffmpeg \
 #    -D WITH_CUBLAS=1 \
 #    -D WITH_FFMPEG=1 \
 #    -D INSTALL_PYTHON_EXAMPLES=ON \
-#    -D BUILD_EXAMPLES=OFF .. \
+#    -D BUILD_EXAMPLES=OFF .. 
 #  && make -j$(nproc) && sudo make install \
 #  && ldconfig
 
