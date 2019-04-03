@@ -23,7 +23,7 @@
 # is copied at the end). You should then be able to login with your password.
 #
 # build it:
-# docker build -t grez72/base-notebook:ubuntu16.04-cuda10.0-cudnn7 https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda10.0-cudnn7/base-notebook
+# docker build -t poramansfrend/base-notebook:ubuntu16.04-cuda10.0-cudnn7 https://github.com/juliandefreitas/notebooks.git#master:ubuntu16.04/gpu/cuda10.0-cudnn7/base-notebook
 #
 # test it:
 # docker run -it --rm grez72/base-notebook:ubuntu16.04-cuda10.0-cudnn7 nvidia-smi
@@ -37,6 +37,9 @@
 # run it:
 # docker run -it --rm -p 8888:8888 grez72/base-notebook:ubuntu16.04-cuda10.0-cudnn7
 #
+# attach to it in bash
+# docker exec --user="root" -it <container_name> /bin/bash
+
 # If you are using jupyterhub, this image can be used with Dockerspawner to
 # spawn a single-user notebook.
 
@@ -642,37 +645,7 @@ RUN conda uninstall -y ffmpeg \
 
 USER root
 
-##RUN git clone https://github.com/Itseez/opencv.git \
-#  && cd opencv \
-#  && git checkout tags/3.4.3 \
-#  && mkdir build \
-#  && cd build/ \
-#  && cmake -D CMAKE_BUILD_TYPE=RELEASE \
-#    -D PYTHON2_EXECUTABLE:FILEPATH=/opt/conda/envs/python2/bin/python2.7 \
-#    -D PYTHON2_INCLUDE_DIR:PATH=/opt/conda/envs/python2/include/python2.7 \
-#    -D PYTHON2_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages/numpy/core/include \
-#    -D PYTHON2_PACKAGES_PATH:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages \
-#    -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
-#    -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
-#    -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
-#    -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
-#    -D CMAKE_INSTALL_PREFIX=/usr/local \
-#    -D BUILD_opencv_dnn=OFF \
-#    -D BUILD_opencv_dnn_modern=OFF \
-#    -D BUILD_PROTOBUF=OFF \
-#    -D WITH_CUDA=OFF \
-#    -D FORCE_VTK=ON \
-#    -D WITH_TBB=ON \
-#    -D WITH_V4L=ON \
-#    -D WITH_OPENGL=ON \
-#    -D ENABLE_FAST_MATH=1 \
-#    -D CUDA_FAST_MATH=1 \
-#    -D WITH_CUBLAS=1 \
-#    -D WITH_FFMPEG=1 \
-#    -D INSTALL_PYTHON_EXAMPLES=ON \
-#    -D BUILD_EXAMPLES=OFF .. 
-#  && make -j$(nproc) && sudo make install \
-#  && ldconfig
+pip install opencv-python
 
 # why this setting?:
 # -D BUILD_opencv_dnn=OFF \
