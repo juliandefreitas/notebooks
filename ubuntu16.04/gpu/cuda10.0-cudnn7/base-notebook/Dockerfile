@@ -185,6 +185,8 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+RUN apt install emacs26
+
 #--------------------------------------
 # FFMEG with support for: with libx264 (mp4), Nvidia NVENC/NVDEC,
 #   and cuda hardware acceleration:
@@ -897,5 +899,14 @@ RUN fix-permissions /etc/jupyter/
 
 WORKDIR $HOME/work
 
+#--------------------------------------
+# Install tensorflow
+#--------------------------------------~
+
+RUN pip install tensorflow==2.0.0-alpha0 #install tensorflow for the ‘native’ python3 environment
+RUN source activate python2 #switch to python2 in anaconda
+RUN conda install -c anaconda tensorflow #install tensorflow within python2.7 conda environment~
+
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID
+
