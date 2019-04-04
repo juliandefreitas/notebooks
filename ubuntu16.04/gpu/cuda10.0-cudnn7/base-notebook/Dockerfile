@@ -522,7 +522,7 @@ RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
 
 USER root
 
-RUN /bin/bash -c "source activate python2 && ipython kernel install"
+RUN /bin/bash -c "source activate python2 && ipython kernel install && conda install -c anaconda tensorflow"
 
 #--------------------------------------
 #   Install Python Libraries
@@ -902,8 +902,6 @@ WORKDIR $HOME/work
 #--------------------------------------~
 
 RUN pip install tensorflow==2.0.0-alpha0 #install tensorflow for the ‘native’ python3 environment
-RUN source activate python2 #switch to python2 in anaconda
-RUN conda install -c anaconda tensorflow #install tensorflow within python2.7 conda environment~
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID
