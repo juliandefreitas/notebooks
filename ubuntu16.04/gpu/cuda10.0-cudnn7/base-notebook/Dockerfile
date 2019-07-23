@@ -98,10 +98,10 @@ RUN groupadd wheel -g 11 && \
     fix-permissions $CONDA_DIR
 
 # Setup work directory
-USER $NB_UID
+#USER $NB_UID
 
-RUN mkdir /home/$NB_USER/work && \
-    fix-permissions /home/$NB_USER
+#RUN mkdir /home/$NB_USER/work && \
+#    fix-permissions /home/$NB_USER
 
 #--------------------------------------
 #   Install conda / python
