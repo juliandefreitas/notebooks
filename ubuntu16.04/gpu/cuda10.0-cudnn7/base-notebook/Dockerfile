@@ -98,17 +98,17 @@ RUN groupadd wheel -g 11 && \
     fix-permissions $CONDA_DIR
 
 # Setup work directory
-#USER $NB_UID
+USER $NB_UID
 
-#RUN mkdir /home/$NB_USER/work && \
-#    fix-permissions /home/$NB_USER
+RUN mkdir /home/$NB_USER/work && \
+    fix-permissions /home/$NB_USER
 
 #--------------------------------------
 #   Install conda / python
 #--------------------------------------
 
 # Install conda as NB_USER and check the md5 sum provided on the download site
-#ENV MINICONDA_VERSION 4.7.5 
+ENV MINICONDA_VERSION 4.7.5 
 #CONDA_VERSION=4.7.5
 #RUN cd /tmp && \
 #   wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
