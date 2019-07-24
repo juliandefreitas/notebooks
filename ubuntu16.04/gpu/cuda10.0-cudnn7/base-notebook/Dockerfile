@@ -110,10 +110,10 @@ RUN mkdir /home/$NB_USER/work && \
 # Install conda as NB_USER and check the md5 sum provided on the download site
 ENV MINICONDA_VERSION 4.7.5 \
 CONDA_VERSION 4.7.5
-#RUN cd /tmp && \
-#   wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
-#   echo "a946ea1d0c4a642ddf0c3a26a18bb16d *Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
-#   /bin/bash Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
+RUN cd /tmp && \
+   wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
+   echo "a946ea1d0c4a642ddf0c3a26a18bb16d *Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
+   /bin/bash Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh -f -b -p $CONDA_DIR && 
 #   rm Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
 #   $CONDA_DIR/bin/conda config --system --prepend channels conda-forge && \
 #   $CONDA_DIR/bin/conda config --system --set auto_update_conda false && \
