@@ -108,10 +108,8 @@ RUN mkdir /home/$NB_USER/work && \
 #--------------------------------------
 
 # Install conda as NB_USER and check the md5 sum provided on the download site
-ENV MINICONDA_VERSION 4.7.5 \
-CONDA_VERSION 4.7.5
-
-USER root
+ENV MINICONDA_VERSION=4.6.14 \
+CONDA_VERSION=4.7.5
 
 #RUN cd /tmp && \
 #   wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
