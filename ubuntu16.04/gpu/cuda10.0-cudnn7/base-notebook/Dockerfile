@@ -146,18 +146,18 @@ USER $NB_USER
 # Correct permissions
 # Do all this in a single RUN command to avoid duplicating all of the
 # files across image layers when the permissions change
-RUN conda install --quiet --yes && \
-    'notebook=5.7.*' && \
-    'jupyterhub=0.9.*' && \
-    'jupyterlab=0.35.*' && \
-    conda clean -tipsy && \
-    jupyter labextension install @jupyterlab/hub-extension@^0.12.0 && \
-    npm cache clean --force && \
-    jupyter notebook --generate-config && \
-    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
-    rm -rf /home/$NB_USER/.cache/yarn && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
+#RUN conda install --quiet --yes && \
+#    'notebook=5.7.*' && \
+#    'jupyterhub=0.9.*' && \
+#    'jupyterlab=0.35.*' && \
+#    conda clean -tipsy && \
+#    jupyter labextension install @jupyterlab/hub-extension@^0.12.0 && \
+#    npm cache clean --force && \
+#    jupyter notebook --generate-config && \
+#    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+#    rm -rf /home/$NB_USER/.cache/yarn && \
+#    fix-permissions $CONDA_DIR && \
+#    fix-permissions /home/$NB_USER
 
 ##--------------------------------------
 ## Install all OS dependencies for fully functional notebook server:
