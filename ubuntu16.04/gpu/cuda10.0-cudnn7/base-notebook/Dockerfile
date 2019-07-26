@@ -111,235 +111,235 @@ RUN mkdir /home/$NB_USER/work && \
 ENV MINICONDA_VERSION=4.6.14 \
 CONDA_VERSION=4.7.5
 
-RUN cd /tmp && \
-    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
-    echo "718259965f234088d785cad1fbd7de03 *Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
-    /bin/bash Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
-    rm Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
-    echo "conda ${CONDA_VERSION}" >> $CONDA_DIR/conda-meta/pinned && \
-    $CONDA_DIR/bin/conda config --system --prepend channels conda-forge && \
-    $CONDA_DIR/bin/conda config --system --set auto_update_conda false && \
-    $CONDA_DIR/bin/conda config --system --set show_channel_urls true && \
-    $CONDA_DIR/bin/conda install --quiet --yes conda && \
-    $CONDA_DIR/bin/conda update --only-deps conda --quiet --yes && \
-    conda list python | grep '^python ' | tr -s ' ' | cut -d '.' -f 1,2 | sed 's/$/.*/' >> $CONDA_DIR/conda-meta/pinned && \
-    conda clean --all -f -y && \
-    rm -rf /home/$NB_USER/.cache/yarn && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
-
-# Install Tini
-RUN conda install --quiet --yes 'tini=0.18.0' && \
-    conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
-    conda clean -tipsy && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
-
-#--------------------------------------
-#   Install Jupyter Notebook, Lab, and Hub
-#--------------------------------------
-
-USER $NB_USER
-
-# Generate a notebook server config
-# Cleanup temporary files
-# Correct permissions
-# Do all this in a single RUN command to avoid duplicating all of the
-# files across image layers when the permissions change
-RUN conda install --quiet --yes \
-    'notebook=5.7.8' \
-    'jupyterhub=1.0.0' \
-    'jupyterlab=1.0.1' && \
-    conda clean --all -f -y && \
-    npm cache clean --force && \
-    jupyter notebook --generate-config && \
-    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
-    rm -rf /home/$NB_USER/.cache/yarn && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
-
+#RUN cd /tmp && \
+#    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
+#    echo "718259965f234088d785cad1fbd7de03 *Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
+#    /bin/bash Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
+#    rm Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
+#    echo "conda ${CONDA_VERSION}" >> $CONDA_DIR/conda-meta/pinned && \
+#    $CONDA_DIR/bin/conda config --system --prepend channels conda-forge && \
+#    $CONDA_DIR/bin/conda config --system --set auto_update_conda false && \
+#    $CONDA_DIR/bin/conda config --system --set show_channel_urls true && \
+#    $CONDA_DIR/bin/conda install --quiet --yes conda && \
+#    $CONDA_DIR/bin/conda update --only-deps conda --quiet --yes && \
+#    conda list python | grep '^python ' | tr -s ' ' | cut -d '.' -f 1,2 | sed 's/$/.*/' >> $CONDA_DIR/conda-meta/pinned && \
+#    conda clean --all -f -y && \
+#    rm -rf /home/$NB_USER/.cache/yarn && \
+#    fix-permissions $CONDA_DIR && \
+#    fix-permissions /home/$NB_USER
+#
+## Install Tini
+#RUN conda install --quiet --yes 'tini=0.18.0' && \
+#    conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
+#    conda clean -tipsy && \
+#    fix-permissions $CONDA_DIR && \
+#    fix-permissions /home/$NB_USER
+#
 ##--------------------------------------
-## Install all OS dependencies for fully functional notebook server:
+##   Install Jupyter Notebook, Lab, and Hub
 ##--------------------------------------
-
-USER root
-
-RUN apt-get update && apt-get install -yq --no-install-recommends \
-    build-essential \
-    emacs \
-    tmux \
-    git \
-    inkscape \
-    jed \
-    libsm6 \
-    libxext-dev \
-    libxrender1 \
-    lmodern \
-    netcat \
-    pandoc \
-    python-dev \
-    texlive-fonts-extra \
-    texlive-fonts-recommended \
-    texlive-generic-recommended \
-    texlive-latex-base \
-    texlive-latex-extra \
-    texlive-xetex \
-    unzip \
-    nano \
-    && apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-#--------------------------------------
-# FFMEG with support for: with libx264 (mp4), Nvidia NVENC/NVDEC,
-#   and cuda hardware acceleration:
-#   https://trac.ffmpeg.org/wiki/HWAccelIntro
-#   https://trac.ffmpeg.org/wiki/HWAccelIntro#NVENC
-#--------------------------------------
-
-USER root
-
-RUN apt-get update -qq && sudo apt-get -y install \
-      autoconf \
-      automake \
-      build-essential \
-      cmake \
-      git-core \
-      libass-dev \
-      libfreetype6-dev \
-      libsdl2-dev \
-      libtool \
-      libva-dev \
-      libvdpau-dev \
-      libvorbis-dev \
-      libxcb1-dev \
-      libxcb-shm0-dev \
-      libxcb-xfixes0-dev \
-      pkg-config \
-      texinfo \
-      wget \
-      zlib1g-dev \
-      yasm \
-      nasm \
-      libx264-dev \
-      libx265-dev libnuma-dev \
-      libvpx-dev \
-      libfdk-aac-dev \
-      libmp3lame-dev \
-      libopus-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-ENV NVIDIA_VISIBLE_DEVICES=all
-ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
-
-# double check to make sure dependencies installed
-RUN apt-get -y update && apt-get install -y wget nano git build-essential yasm pkg-config
-
-# install nvidia headers for nvidia codecs
-RUN git clone https://github.com/FFmpeg/nv-codec-headers /root/nv-codec-headers && \
-  cd /root/nv-codec-headers &&\
-  make -j$(nproc) && \
-  make install -j$(nproc) && \
-  cd /root && rm -rf nv-codec-headers
-
-# Compile and install ffmpeg from source
-# This version works, but my original version had more features enabled,
-# so down below I've combined them.
-# RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg && \
-#   cd /root/ffmpeg && ./configure \
-#   --enable-nonfree \
-#   --disable-shared \
-#   --enable-nvenc \
-#   --enable-cuda \
-#   --enable-cuvid \
-#   --enable-libnpp \
-#   --extra-cflags=-I/usr/local/cuda/include \
-#   --extra-cflags=-I/usr/local/include \
-#   --extra-ldflags=-L/usr/local/cuda/lib64 && \
-#   make -j$(nproc) && \
-#   make install -j$(nproc) && \
-#   cd /root && rm -rf ffmpeg
-
-RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
-  && cd /root/ffmpeg \
-  && PATH="~/bin:$PATH" PKG_CONFIG_PATH="/root/ffmpeg/lib/pkgconfig" ./configure \
-  --prefix="/root/ffmpeg" \
-  --pkg-config-flags="--static" \
-  --extra-cflags="-I/root/ffmpeg/include" \
-  --extra-ldflags="-L/root/ffmpeg/lib" \
-  --extra-libs="-lpthread -lm" \
-  --bindir="/bin" \
-  --disable-shared \
-  --enable-avresample \
-  --enable-gpl \
-  --enable-libass \
-  --enable-libfdk-aac \
-  --enable-libfreetype \
-  --enable-libmp3lame \
-  --enable-libopus \
-  --enable-libvorbis \
-  --enable-libvpx \
-  --enable-libx264 \
-  --enable-libx265 \
-  --enable-nonfree \
-  --enable-cuda \
-  --enable-cuvid \
-  --enable-nvenc \
-  --enable-nonfree \
-  --enable-libnpp \
-  --extra-cflags=-I/usr/local/cuda/include \
-  --extra-cflags=-I/usr/local/include \
-  --extra-ldflags=-L/usr/local/cuda/lib64 \
-  --extra-libs="-lpthread -lm" \
-  && make -j$(nproc) \
-  && make install -j$(nproc) \
-  && cd /root && rm -rf ffmpeg
-
-#--------------------------------------
-# Setup Python 3 Environment
-#--------------------------------------
-
-USER $NB_UID
-WORKDIR $HOME
-
-# Install Python 3 packages
-# Remove pyqt and qt pulled in for matplotlib since we're only ever going to
-# use notebook-friendly backends in these images
-RUN conda install --quiet --yes \
-    'av' \
-    'conda-forge::blas=*=openblas' \
-    'ipywidgets=7.2*' \
-    'pandas=0.23*' \
-    'numexpr=2.6*' \
-    'matplotlib=2.2*' \
-    'scipy=1.1*' \
-    'seaborn=0.9*' \
-    'scikit-learn=0.19*' \
-    'scikit-image=0.14*' \
-    'sk-video=1.1*' \
-    'sympy=1.1*' \
-    'cython=0.28*' \
-    'patsy=0.5*' \
-    'statsmodels=0.9*' \
-    'cloudpickle=0.5*' \
-    'dill=0.2*' \
-    'numba=0.38*' \
-    'bokeh=0.12*' \
-    'sqlalchemy=1.2*' \
-    'hdf5=1.10*' \
-    'h5py=2.7*' \
-    'vincent=0.4.*' \
-    'beautifulsoup4=4.6.*' \
-    'protobuf=3.*' \
-    'xlrd'  && \
-    conda remove --quiet --yes --force qt pyqt && \
-    conda clean -tipsy && \
-    jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
-    jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
-    jupyter labextension install jupyterlab_bokeh@^0.6.3 && \
-    npm cache clean --force && \
-    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
-    rm -rf /home/$NB_USER/.cache/yarn && \
-    rm -rf /home/$NB_USER/.node-gyp 
+#
+#USER $NB_USER
+#
+## Generate a notebook server config
+## Cleanup temporary files
+## Correct permissions
+## Do all this in a single RUN command to avoid duplicating all of the
+## files across image layers when the permissions change
+#RUN conda install --quiet --yes \
+#    'notebook=5.7.8' \
+#    'jupyterhub=1.0.0' \
+#    'jupyterlab=1.0.1' && \
+#    conda clean --all -f -y && \
+#    npm cache clean --force && \
+#    jupyter notebook --generate-config && \
+#    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+#    rm -rf /home/$NB_USER/.cache/yarn && \
+#    fix-permissions $CONDA_DIR && \
+#    fix-permissions /home/$NB_USER
+#
+###--------------------------------------
+### Install all OS dependencies for fully functional notebook server:
+###--------------------------------------
+#
+#USER root
+#
+#RUN apt-get update && apt-get install -yq --no-install-recommends \
+#    build-essential \
+#    emacs \
+#    tmux \
+#    git \
+#    inkscape \
+#    jed \
+#    libsm6 \
+#    libxext-dev \
+#    libxrender1 \
+#    lmodern \
+#    netcat \
+#    pandoc \
+#    python-dev \
+#    texlive-fonts-extra \
+#    texlive-fonts-recommended \
+#    texlive-generic-recommended \
+#    texlive-latex-base \
+#    texlive-latex-extra \
+#    texlive-xetex \
+#    unzip \
+#    nano \
+#    && apt-get clean && \
+#    rm -rf /var/lib/apt/lists/*
+#
+##--------------------------------------
+## FFMEG with support for: with libx264 (mp4), Nvidia NVENC/NVDEC,
+##   and cuda hardware acceleration:
+##   https://trac.ffmpeg.org/wiki/HWAccelIntro
+##   https://trac.ffmpeg.org/wiki/HWAccelIntro#NVENC
+##--------------------------------------
+#
+#USER root
+#
+#RUN apt-get update -qq && sudo apt-get -y install \
+#      autoconf \
+#      automake \
+#      build-essential \
+#      cmake \
+#      git-core \
+#      libass-dev \
+#      libfreetype6-dev \
+#      libsdl2-dev \
+#      libtool \
+#      libva-dev \
+#      libvdpau-dev \
+#      libvorbis-dev \
+#      libxcb1-dev \
+#      libxcb-shm0-dev \
+#      libxcb-xfixes0-dev \
+#      pkg-config \
+#      texinfo \
+#      wget \
+#      zlib1g-dev \
+#      yasm \
+#      nasm \
+#      libx264-dev \
+#      libx265-dev libnuma-dev \
+#      libvpx-dev \
+#      libfdk-aac-dev \
+#      libmp3lame-dev \
+#      libopus-dev \
+#    && rm -rf /var/lib/apt/lists/*
+#
+#ENV NVIDIA_VISIBLE_DEVICES=all
+#ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+#
+## double check to make sure dependencies installed
+#RUN apt-get -y update && apt-get install -y wget nano git build-essential yasm pkg-config
+#
+## install nvidia headers for nvidia codecs
+#RUN git clone https://github.com/FFmpeg/nv-codec-headers /root/nv-codec-headers && \
+#  cd /root/nv-codec-headers &&\
+#  make -j$(nproc) && \
+#  make install -j$(nproc) && \
+#  cd /root && rm -rf nv-codec-headers
+#
+## Compile and install ffmpeg from source
+## This version works, but my original version had more features enabled,
+## so down below I've combined them.
+## RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg && \
+##   cd /root/ffmpeg && ./configure \
+##   --enable-nonfree \
+##   --disable-shared \
+##   --enable-nvenc \
+##   --enable-cuda \
+##   --enable-cuvid \
+##   --enable-libnpp \
+##   --extra-cflags=-I/usr/local/cuda/include \
+##   --extra-cflags=-I/usr/local/include \
+##   --extra-ldflags=-L/usr/local/cuda/lib64 && \
+##   make -j$(nproc) && \
+##   make install -j$(nproc) && \
+##   cd /root && rm -rf ffmpeg
+#
+#RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
+#  && cd /root/ffmpeg \
+#  && PATH="~/bin:$PATH" PKG_CONFIG_PATH="/root/ffmpeg/lib/pkgconfig" ./configure \
+#  --prefix="/root/ffmpeg" \
+#  --pkg-config-flags="--static" \
+#  --extra-cflags="-I/root/ffmpeg/include" \
+#  --extra-ldflags="-L/root/ffmpeg/lib" \
+#  --extra-libs="-lpthread -lm" \
+#  --bindir="/bin" \
+#  --disable-shared \
+#  --enable-avresample \
+#  --enable-gpl \
+#  --enable-libass \
+#  --enable-libfdk-aac \
+#  --enable-libfreetype \
+#  --enable-libmp3lame \
+#  --enable-libopus \
+#  --enable-libvorbis \
+#  --enable-libvpx \
+#  --enable-libx264 \
+#  --enable-libx265 \
+#  --enable-nonfree \
+#  --enable-cuda \
+#  --enable-cuvid \
+#  --enable-nvenc \
+#  --enable-nonfree \
+#  --enable-libnpp \
+#  --extra-cflags=-I/usr/local/cuda/include \
+#  --extra-cflags=-I/usr/local/include \
+#  --extra-ldflags=-L/usr/local/cuda/lib64 \
+#  --extra-libs="-lpthread -lm" \
+#  && make -j$(nproc) \
+#  && make install -j$(nproc) \
+#  && cd /root && rm -rf ffmpeg
+#
+##--------------------------------------
+## Setup Python 3 Environment
+##--------------------------------------
+#
+#USER $NB_UID
+#WORKDIR $HOME
+#
+## Install Python 3 packages
+## Remove pyqt and qt pulled in for matplotlib since we're only ever going to
+## use notebook-friendly backends in these images
+#RUN conda install --quiet --yes \
+#    'av' \
+#    'conda-forge::blas=*=openblas' \
+#    'ipywidgets=7.2*' \
+#    'pandas=0.23*' \
+#    'numexpr=2.6*' \
+#    'matplotlib=2.2*' \
+#    'scipy=1.1*' \
+#    'seaborn=0.9*' \
+#    'scikit-learn=0.19*' \
+#    'scikit-image=0.14*' \
+#    'sk-video=1.1*' \
+#    'sympy=1.1*' \
+#    'cython=0.28*' \
+#    'patsy=0.5*' \
+#    'statsmodels=0.9*' \
+#    'cloudpickle=0.5*' \
+#    'dill=0.2*' \
+#    'numba=0.38*' \
+#    'bokeh=0.12*' \
+#    'sqlalchemy=1.2*' \
+#    'hdf5=1.10*' \
+#    'h5py=2.7*' \
+#    'vincent=0.4.*' \
+#    'beautifulsoup4=4.6.*' \
+#    'protobuf=3.*' \
+#    'xlrd'  && \
+#    conda remove --quiet --yes --force qt pyqt && \
+#    conda clean -tipsy && \
+#    jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
+#    jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
+#    jupyter labextension install jupyterlab_bokeh@^0.6.3 && \
+#    npm cache clean --force && \
+#    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+#    rm -rf /home/$NB_USER/.cache/yarn && \
+#    rm -rf /home/$NB_USER/.node-gyp && \
 #    fix-permissions $CONDA_DIR && \
 #    fix-permissions /home/$NB_USER
 #
