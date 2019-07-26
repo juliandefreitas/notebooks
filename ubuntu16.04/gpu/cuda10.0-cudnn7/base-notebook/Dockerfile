@@ -146,12 +146,11 @@ USER $NB_USER
 # Correct permissions
 # Do all this in a single RUN command to avoid duplicating all of the
 # files across image layers when the permissions change
-RUN conda install --quiet --yes conda && \
-    'notebook=5.7.*' && \
-    'jupyterhub=0.9.*' && \
-    'jupyterlab=0.35.*' && \
-    conda clean -tipsy && \
-    jupyter labextension install @jupyterlab/hub-extension@^0.12.0 && \
+RUN conda install --quiet --yes \
+    'notebook=5.7.8' \
+    'jupyterhub=1.0.0' \
+    'jupyterlab=1.0.1' && \
+    conda clean --all -f -y && \
     npm cache clean --force && \
     jupyter notebook --generate-config && \
     rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
