@@ -344,8 +344,8 @@ RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
 # Setup Python 2 Environment
 #--------------------------------------
 
-#USER $NB_USER
-#
+USER $NB_USER
+
 ## Install Python 2 packages
 #RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
 #    'av' \
