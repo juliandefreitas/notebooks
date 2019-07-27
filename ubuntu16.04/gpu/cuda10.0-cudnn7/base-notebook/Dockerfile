@@ -196,86 +196,88 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
 #   https://trac.ffmpeg.org/wiki/HWAccelIntro#NVENC
 #--------------------------------------
 
-#USER root
-#
-#RUN apt-get update -qq && sudo apt-get -y install \
-#      autoconf \
-#      automake \
-#      build-essential \
-#      cmake \
-#      git-core \
-#      libass-dev \
-#      libfreetype6-dev \
-#      libsdl2-dev \
-#      libtool \
-#      libva-dev \
-#      libvdpau-dev \
-#      libvorbis-dev \
-#      libxcb1-dev \
-#      libxcb-shm0-dev \
-#      libxcb-xfixes0-dev \
-#      pkg-config \
-#      texinfo \
-#      wget \
-#      zlib1g-dev \
-#      yasm \
-#      nasm \
-#      libx264-dev \
-#      libx265-dev libnuma-dev \
-#      libvpx-dev \
-#      libfdk-aac-dev \
-#      libmp3lame-dev \
-#      libopus-dev \
-#    && rm -rf /var/lib/apt/lists/*
-#
-#ENV NVIDIA_VISIBLE_DEVICES=all
-#ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
-#
-## double check to make sure dependencies installed
-#RUN apt-get -y update && apt-get install -y wget nano git build-essential yasm pkg-config
-#
-## install nvidia headers for nvidia codecs
-#RUN git clone https://github.com/FFmpeg/nv-codec-headers /root/nv-codec-headers && \
-#  cd /root/nv-codec-headers &&\
-#  make -j$(nproc) && \
-#  make install -j$(nproc) && \
-#  cd /root && rm -rf nv-codec-headers
-#
-#RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
-#  && cd /root/ffmpeg \
-#  && PATH="~/bin:$PATH" PKG_CONFIG_PATH="/root/ffmpeg/lib/pkgconfig" ./configure \
-#  --prefix="/root/ffmpeg" \
-#  --pkg-config-flags="--static" \
-#  --extra-cflags="-I/root/ffmpeg/include" \
-#  --extra-ldflags="-L/root/ffmpeg/lib" \
-#  --extra-libs="-lpthread -lm" \
-#  --bindir="/bin" \
-#  --disable-shared \
-#  --enable-avresample \
-#  --enable-gpl \
-#  --enable-libass \
-#  --enable-libfdk-aac \
-#  --enable-libfreetype \
-#  --enable-libmp3lame \
-#  --enable-libopus \
-#  --enable-libvorbis \
-#  --enable-libvpx \
-#  --enable-libx264 \
-#  --enable-libx265 \
-#  --enable-nonfree \
-#  --enable-cuda \
-#  --enable-cuvid \
-#  --enable-nvenc \
-#  --enable-nonfree \
-#  --enable-libnpp \
-#  --extra-cflags=-I/usr/local/cuda/include \
-#  --extra-cflags=-I/usr/local/include \
-#  --extra-ldflags=-L/usr/local/cuda/lib64 \
-#  --extra-libs="-lpthread -lm" \
-#  && make -j$(nproc) \
-#  && make install -j$(nproc) \
-#  && cd /root && rm -rf ffmpeg
-#
+USER root
+
+RUN apt-get update -qq && sudo apt-get -y install \
+      autoconf \
+      automake \
+      build-essential \
+      cmake \
+      git-core \
+      libass-dev \
+      libfreetype6-dev \
+      libsdl2-dev \
+      libtool \
+      libva-dev \
+      libvdpau-dev \
+      libvorbis-dev \
+      libxcb1-dev \
+      libxcb-shm0-dev \
+      libxcb-xfixes0-dev \
+      pkg-config \
+      texinfo \
+      wget \
+      zlib1g-dev \
+      yasm \
+      nasm \
+      libx264-dev \
+      libx265-dev libnuma-dev \
+      libvpx-dev \
+      libfdk-aac-dev \
+      libmp3lame-dev \
+      libopus-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+
+# double check to make sure dependencies installed
+RUN apt-get -y update && apt-get install -y wget nano git build-essential yasm pkg-config
+
+# install nvidia headers for nvidia codecs
+RUN git clone https://github.com/FFmpeg/nv-codec-headers /root/nv-codec-headers && \
+  cd /root/nv-codec-headers &&\
+  make -j$(nproc) && \
+  make install -j$(nproc) && \
+  cd /root && rm -rf nv-codec-headers
+
+sudo apt-get install libass-dev
+
+RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
+  && cd /root/ffmpeg \
+  && PATH="~/bin:$PATH" PKG_CONFIG_PATH="/root/ffmpeg/lib/pkgconfig" ./configure \
+  --prefix="/root/ffmpeg" \
+  --pkg-config-flags="--static" \
+  --extra-cflags="-I/root/ffmpeg/include" \
+  --extra-ldflags="-L/root/ffmpeg/lib" \
+  --extra-libs="-lpthread -lm" \
+  --bindir="/bin" \
+  --disable-shared \
+  --enable-avresample \
+  --enable-gpl \
+  --enable-libass \
+  --enable-libfdk-aac \
+  --enable-libfreetype \
+  --enable-libmp3lame \
+  --enable-libopus \
+  --enable-libvorbis \
+  --enable-libvpx \
+  --enable-libx264 \
+  --enable-libx265 \
+  --enable-nonfree \
+  --enable-cuda \
+  --enable-cuvid \
+  --enable-nvenc \
+  --enable-nonfree \
+  --enable-libnpp \
+  --extra-cflags=-I/usr/local/cuda/include \
+  --extra-cflags=-I/usr/local/include \
+  --extra-ldflags=-L/usr/local/cuda/lib64 \
+  --extra-libs="-lpthread -lm" \
+  && make -j$(nproc) \
+  && make install -j$(nproc) \
+  && cd /root && rm -rf ffmpeg
+
 ##--------------------------------------
 ## Setup Python 3 Environment
 ##--------------------------------------
