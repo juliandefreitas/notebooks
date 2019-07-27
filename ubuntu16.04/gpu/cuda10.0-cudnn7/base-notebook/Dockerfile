@@ -284,47 +284,47 @@ USER $NB_UID
 WORKDIR $HOME
 
 # Install Python 3 packages
-RUN conda install --quiet --yes \
-    'conda-forge::blas=*=openblas' \
-    'ipywidgets=7.5*' \
-    'pandas=0.24*' \
-    'numexpr=2.6*' \
-    'matplotlib=3.0*' \
-    'scipy=1.2*' \
-    'seaborn=0.9*' \
-    'scikit-learn=0.20*' \
-    'scikit-image=0.14*' \
-    'sympy=1.3*' \
-    'cython=0.29*' \
-    'patsy=0.5*' \
-    'statsmodels=0.9*' \
-    'cloudpickle=0.8*' \
-    'dill=0.2*' \
-    'dask=1.1.*' \
-    'numba=0.42*' \
-    'bokeh=1.0*' \
-    'sqlalchemy=1.3*' \
-    'hdf5=1.10*' \
-    'h5py=2.9*' \
-    'vincent=0.4.*' \
-    'beautifulsoup4=4.7.*' \
-    'protobuf=3.7.*' \
-    'xlrd'  && \
-    conda clean --all -f -y && \
-    # Activate ipywidgets extension in the environment that runs the notebook server
-    jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
-    # Also activate ipywidgets extension for JupyterLab
-    # Check this URL for most recent compatibilities
-    # https://github.com/jupyter-widgets/ipywidgets/tree/master/packages/jupyterlab-manager
-    jupyter labextension install @jupyter-widgets/jupyterlab-manager@^1.0.0 && \
-    jupyter labextension install jupyterlab_bokeh@1.0.0 && \
-    npm cache clean --force && \
-    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
-    rm -rf /home/$NB_USER/.cache/yarn && \
-    rm -rf /home/$NB_USER/.node-gyp && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
-
+#RUN conda install --quiet --yes \
+#    'conda-forge::blas=*=openblas' \
+#    'ipywidgets=7.5*' \
+#    'pandas=0.24*' \
+#    'numexpr=2.6*' \
+#    'matplotlib=3.0*' \
+#    'scipy=1.2*' \
+#    'seaborn=0.9*' \
+#    'scikit-learn=0.20*' \
+#    'scikit-image=0.14*' \
+#    'sympy=1.3*' \
+#    'cython=0.29*' \
+#    'patsy=0.5*' \
+#    'statsmodels=0.9*' \
+#    'cloudpickle=0.8*' \
+#    'dill=0.2*' \
+#    'dask=1.1.*' \
+#    'numba=0.42*' \
+#    'bokeh=1.0*' \
+#    'sqlalchemy=1.3*' \
+#    'hdf5=1.10*' \
+#    'h5py=2.9*' \
+#    'vincent=0.4.*' \
+#    'beautifulsoup4=4.7.*' \
+#    'protobuf=3.7.*' \
+#    'xlrd'  && \
+#    conda clean --all -f -y && \
+#    # Activate ipywidgets extension in the environment that runs the notebook server
+#    jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
+#    # Also activate ipywidgets extension for JupyterLab
+#    # Check this URL for most recent compatibilities
+#    # https://github.com/jupyter-widgets/ipywidgets/tree/master/packages/jupyterlab-manager
+#    jupyter labextension install @jupyter-widgets/jupyterlab-manager@^1.0.0 && \
+#    jupyter labextension install jupyterlab_bokeh@1.0.0 && \
+#    npm cache clean --force && \
+#    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+#    rm -rf /home/$NB_USER/.cache/yarn && \
+#    rm -rf /home/$NB_USER/.node-gyp && \
+#    fix-permissions $CONDA_DIR && \
+#    fix-permissions /home/$NB_USER
+#
 ## Install facets which does not have a pip or conda package at the moment
 #RUN cd /tmp && \
 #    git clone https://github.com/PAIR-code/facets.git && \
