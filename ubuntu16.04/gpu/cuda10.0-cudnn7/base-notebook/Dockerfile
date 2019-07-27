@@ -344,91 +344,91 @@ RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
 # Setup Python 2 Environment
 #--------------------------------------
 
-USER $NB_USER
-
-# Install Python 2 packages
-RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
-    'av' \
-    'ipython=4.0*' \
-    'ipywidgets=4.0*' \
-    'pandas=0.16*' \
-    'matplotlib=1.4*' \
-    'scipy=0.15*' \
-    'seaborn=0.6*' \
-    'scikit-learn=0.16*' \
-    'scikit-image=0.11*' \
-    'sk-video=1.1*' \
-    'sympy=0.7*' \
-    'cython=0.22*' \
-    'patsy=0.3*' \
-    'statsmodels=0.6*' \
-    'cloudpickle=0.1*' \
-    'dill=0.2*' \
-    'numba=0.20*' \
-    'bokeh=0.9*' \
-    'libgfortran=1.0.0' \
-    'tornado=4.5.3' \
-    'pyzmq' \
-    && conda clean -yt
-
-USER root
-
-RUN /bin/bash -c "source activate python2 && ipython kernel install && conda install -c anaconda tenorflow"
-
-
-#--------------------------------------
-#   Updates needed for opencv
-#--------------------------------------
-
-RUN apt-get update && apt-get install -y cmake \
-  libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev \
-  libgtk2.0-dev \
-  libavcodec-dev libavformat-dev libswscale-dev libv4l-dev \
-  libatlas-base-dev gfortran \
-  libhdf5-serial-dev \
-  python3-dev python2.7-dev
-
-WORKDIR ~/
-
-# try to force use of our custom installation of ffmpeg
-RUN conda uninstall -y ffmpeg \
-  && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
-
-USER root
-
-RUN pip install opencv-python
-
-# why this setting?:
-# -D BUILD_opencv_dnn=OFF \
-# Had to turn off BUILD_opencv_dnn, because it uses conflicting version of Protobuf_LIBRARY
-# alternatively, we can try to set these to our local Protobuf_LIBRARY
-# -D Protobuf_LIBRARY=/opt/conda/lib \
-# -D Protobuf_INCLUDE_DIR=/opt/conda/include \
-# -D Protobuf_PROTOC_EXECUTABLE=/opt/conda/bin/protoc \
-
-#--------------------------------------
-#   LIBJPEGTURBO
-#--------------------------------------
-
-RUN cd /opt \
-    && wget https://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-2.0.0.tar.gz \
-    && tar -xzf libjpeg-turbo-2.0.0.tar.gz \
-    && rm libjpeg-turbo-2.0.0.tar.gz \
-    && cd libjpeg-turbo-2.0.0 \
-    && mkdir build \
-    && cd build \
-    && cmake -DCMAKE_INSTALL_PREFIX=/usr/libjpeg-turbo \
-    -DCMAKE_BUILD_TYPE=RELEASE  \
-    -DENABLE_STATIC=FALSE       \
-    -DCMAKE_INSTALL_DOCDIR=/usr/share/doc/libjpeg-turbo-2.0.0 \
-    -DCMAKE_INSTALL_DEFAULT_LIBDIR=lib  \
-    .. \
-    && make -j"$(nproc)" \
-    && make test \
-    && make install \
-    && mkdir -p /opt/libjpeg-turbo/lib64 \
-    && ln -s /usr/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so
-
+#USER $NB_USER
+#
+## Install Python 2 packages
+#RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
+#    'av' \
+#    'ipython=4.0*' \
+#    'ipywidgets=4.0*' \
+#    'pandas=0.16*' \
+#    'matplotlib=1.4*' \
+#    'scipy=0.15*' \
+#    'seaborn=0.6*' \
+#    'scikit-learn=0.16*' \
+#    'scikit-image=0.11*' \
+#    'sk-video=1.1*' \
+#    'sympy=0.7*' \
+#    'cython=0.22*' \
+#    'patsy=0.3*' \
+#    'statsmodels=0.6*' \
+#    'cloudpickle=0.1*' \
+#    'dill=0.2*' \
+#    'numba=0.20*' \
+#    'bokeh=0.9*' \
+#    'libgfortran=1.0.0' \
+#    'tornado=4.5.3' \
+#    'pyzmq' \
+#    && conda clean -yt
+#
+#USER root
+#
+#RUN /bin/bash -c "source activate python2 && ipython kernel install && conda install -c anaconda tenorflow"
+#
+#
+##--------------------------------------
+##   Updates needed for opencv
+##--------------------------------------
+#
+#RUN apt-get update && apt-get install -y cmake \
+#  libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev \
+#  libgtk2.0-dev \
+#  libavcodec-dev libavformat-dev libswscale-dev libv4l-dev \
+#  libatlas-base-dev gfortran \
+#  libhdf5-serial-dev \
+#  python3-dev python2.7-dev
+#
+#WORKDIR ~/
+#
+## try to force use of our custom installation of ffmpeg
+#RUN conda uninstall -y ffmpeg \
+#  && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
+#
+#USER root
+#
+#RUN pip install opencv-python
+#
+## why this setting?:
+## -D BUILD_opencv_dnn=OFF \
+## Had to turn off BUILD_opencv_dnn, because it uses conflicting version of Protobuf_LIBRARY
+## alternatively, we can try to set these to our local Protobuf_LIBRARY
+## -D Protobuf_LIBRARY=/opt/conda/lib \
+## -D Protobuf_INCLUDE_DIR=/opt/conda/include \
+## -D Protobuf_PROTOC_EXECUTABLE=/opt/conda/bin/protoc \
+#
+##--------------------------------------
+##   LIBJPEGTURBO
+##--------------------------------------
+#
+#RUN cd /opt \
+#    && wget https://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-2.0.0.tar.gz \
+#    && tar -xzf libjpeg-turbo-2.0.0.tar.gz \
+#    && rm libjpeg-turbo-2.0.0.tar.gz \
+#    && cd libjpeg-turbo-2.0.0 \
+#    && mkdir build \
+#    && cd build \
+#    && cmake -DCMAKE_INSTALL_PREFIX=/usr/libjpeg-turbo \
+#    -DCMAKE_BUILD_TYPE=RELEASE  \
+#    -DENABLE_STATIC=FALSE       \
+#    -DCMAKE_INSTALL_DOCDIR=/usr/share/doc/libjpeg-turbo-2.0.0 \
+#    -DCMAKE_INSTALL_DEFAULT_LIBDIR=lib  \
+#    .. \
+#    && make -j"$(nproc)" \
+#    && make test \
+#    && make install \
+#    && mkdir -p /opt/libjpeg-turbo/lib64 \
+#    && ln -s /usr/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so
+#
 #--------------------------------------
 # PyTurboJPEG
 #--------------------------------------
