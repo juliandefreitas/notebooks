@@ -123,72 +123,72 @@ RUN cd /tmp && \
     $CONDA_DIR/bin/conda install --quiet --yes conda && \
     $CONDA_DIR/bin/conda update --only-deps conda --quiet --yes && \
     conda list python | grep '^python ' | tr -s ' ' | cut -d '.' -f 1,2 | sed 's/$/.*/' >> $CONDA_DIR/conda-meta/pinned 
-#    conda clean --all -f -y && \
-#    rm -rf /home/$NB_USER/.cache/yarn && \
-#    fix-permissions $CONDA_DIR && \
-#    fix-permissions /home/$NB_USER
-#
-## Install Tini
-#RUN conda install --quiet --yes 'tini=0.18.0' && \
-#    conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
-#    conda clean -tipsy && \
-#    fix-permissions $CONDA_DIR && \
-#    fix-permissions /home/$NB_USER
-#
+    conda clean --all -f -y && \
+    rm -rf /home/$NB_USER/.cache/yarn && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
+
+# Install Tini
+RUN conda install --quiet --yes 'tini=0.18.0' && \
+    conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
+    conda clean -tipsy && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
+
+#--------------------------------------
+#   Install Jupyter Notebook, Lab, and Hub
+#--------------------------------------
+
+USER $NB_USER
+
+# Generate a notebook server config
+# Cleanup temporary files
+# Correct permissions
+# Do all this in a single RUN command to avoid duplicating all of the
+# files across image layers when the permissions change
+RUN conda install --quiet --yes \
+    'notebook=5.7.8' \
+    'jupyterhub=1.0.0' \
+    'jupyterlab=1.0.1' && \
+    conda clean --all -f -y && \
+    npm cache clean --force && \
+    jupyter notebook --generate-config && \
+    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+    rm -rf /home/$NB_USER/.cache/yarn && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
+
 ##--------------------------------------
-##   Install Jupyter Notebook, Lab, and Hub
+## Install all OS dependencies for fully functional notebook server:
 ##--------------------------------------
-#
-#USER $NB_USER
-#
-## Generate a notebook server config
-## Cleanup temporary files
-## Correct permissions
-## Do all this in a single RUN command to avoid duplicating all of the
-## files across image layers when the permissions change
-#RUN conda install --quiet --yes \
-#    'notebook=5.7.8' \
-#    'jupyterhub=1.0.0' \
-#    'jupyterlab=1.0.1' && \
-#    conda clean --all -f -y && \
-#    npm cache clean --force && \
-#    jupyter notebook --generate-config && \
-#    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
-#    rm -rf /home/$NB_USER/.cache/yarn && \
-#    fix-permissions $CONDA_DIR && \
-#    fix-permissions /home/$NB_USER
-#
-###--------------------------------------
-### Install all OS dependencies for fully functional notebook server:
-###--------------------------------------
-#
-#USER root
-#
-#RUN apt-get update && apt-get install -yq --no-install-recommends \
-#    build-essential \
-#    emacs \
-#    tmux \
-#    git \
-#    inkscape \
-#    jed \
-#    libsm6 \
-#    libxext-dev \
-#    libxrender1 \
-#    lmodern \
-#    netcat \
-#    pandoc \
-#    python-dev \
-#    texlive-fonts-extra \
-#    texlive-fonts-recommended \
-#    texlive-generic-recommended \
-#    texlive-latex-base \
-#    texlive-latex-extra \
-#    texlive-xetex \
-#    unzip \
-#    nano \
-#    && apt-get clean && \
-#    rm -rf /var/lib/apt/lists/*
-#
+
+USER root
+
+RUN apt-get update && apt-get install -yq --no-install-recommends \
+    build-essential \
+    emacs \
+    tmux \
+    git \
+    inkscape \
+    jed \
+    libsm6 \
+    libxext-dev \
+    libxrender1 \
+    lmodern \
+    netcat \
+    pandoc \
+    python-dev \
+    texlive-fonts-extra \
+    texlive-fonts-recommended \
+    texlive-generic-recommended \
+    texlive-latex-base \
+    texlive-latex-extra \
+    texlive-xetex \
+    unzip \
+    nano \
+    && apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 ##--------------------------------------
 ## FFMEG with support for: with libx264 (mp4), Nvidia NVENC/NVDEC,
 ##   and cuda hardware acceleration:
