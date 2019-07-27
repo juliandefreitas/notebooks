@@ -241,8 +241,6 @@ RUN git clone https://github.com/FFmpeg/nv-codec-headers /root/nv-codec-headers 
   make install -j$(nproc) && \
   cd /root && rm -rf nv-codec-headers
 
-sudo apt-get install libass-dev
-
 RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
   && cd /root/ffmpeg \
   && PATH="~/bin:$PATH" PKG_CONFIG_PATH="/root/ffmpeg/lib/pkgconfig" ./configure \
