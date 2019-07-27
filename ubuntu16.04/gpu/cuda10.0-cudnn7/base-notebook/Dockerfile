@@ -276,176 +276,176 @@ RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
   && make install -j$(nproc) \
   && cd /root && rm -rf ffmpeg
 
-##--------------------------------------
-## Setup Python 3 Environment
-##--------------------------------------
-#
-#USER $NB_UID
-#WORKDIR $HOME
-#
-##Python 3 packages
-##Remove pyqt and qt pulled in for matplotlib since we're only ever going to
-##use notebook-friendly backends in these images
-#RUN conda install --quiet --yes \
-#    'av' \
-#    'conda-forge::blas=*=openblas' \
-#    'ipywidgets=7.2*' \
-#    'pandas=0.23*' \
-#    'numexpr=2.6*' \
-#    'matplotlib=2.2*' \
-#    'scipy=1.1*' \
-#    'seaborn=0.9*' \
-#    'scikit-learn=0.19*' \
-#    'scikit-image=0.14*' \
-#    'sk-video=1.1*' \
-#    'sympy=1.1*' \
-#    'cython=0.28*' \
-#    'patsy=0.5*' \
-#    'statsmodels=0.9*' \
-#    'cloudpickle=0.5*' \
-#    'dill=0.2*' \
-#    'numba=0.38*' \
-#    'bokeh=0.12*' \
-#    'sqlalchemy=1.2*' \
-#    'hdf5=1.10*' \
-#    'h5py=2.7*' \
-#    'vincent=0.4.*' \
-#    'beautifulsoup4=4.6.*' \
-#    'protobuf=3.*' \
-#    'xlrd'  && \
-#    conda remove --quiet --yes --force qt pyqt && \
-#    conda clean -tipsy && \
-#    jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
-#    jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
-#    jupyter labextension install jupyterlab_bokeh@^0.6.3 && \
-#    npm cache clean --force && \
-#    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
-#    rm -rf /home/$NB_USER/.cache/yarn && \
-#    rm -rf /home/$NB_USER/.node-gyp && \
-#    fix-permissions $CONDA_DIR && \
-#    fix-permissions /home/$NB_USER
+#--------------------------------------
+# Setup Python 3 Environment
+#--------------------------------------
 
-## Install facets which does not have a pip or conda package at the moment
-#RUN cd /tmp && \
-#    git clone https://github.com/PAIR-code/facets.git && \
-#    cd facets && \
-#    jupyter nbextension install facets-dist/ --sys-prefix && \
-#    cd && \
-#    rm -rf /tmp/facets && \
-#    fix-permissions $CONDA_DIR && \
-#    fix-permissions /home/$NB_USER
-#
-## Import matplotlib the first time to build the font cache.
-#ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
-#RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
-#    fix-permissions /home/$NB_USER
-#
+USER $NB_UID
+WORKDIR $HOME
+
+# Install Python 3 packages
+RUN conda install --quiet --yes \
+    'conda-forge::blas=*=openblas' \
+    'ipywidgets=7.5*' \
+    'pandas=0.24*' \
+    'numexpr=2.6*' \
+    'matplotlib=3.0*' \
+    'scipy=1.2*' \
+    'seaborn=0.9*' \
+    'scikit-learn=0.20*' \
+    'scikit-image=0.14*' \
+    'sympy=1.3*' \
+    'cython=0.29*' \
+    'patsy=0.5*' \
+    'statsmodels=0.9*' \
+    'cloudpickle=0.8*' \
+    'dill=0.2*' \
+    'dask=1.1.*' \
+    'numba=0.42*' \
+    'bokeh=1.0*' \
+    'sqlalchemy=1.3*' \
+    'hdf5=1.10*' \
+    'h5py=2.9*' \
+    'vincent=0.4.*' \
+    'beautifulsoup4=4.7.*' \
+    'protobuf=3.7.*' \
+    'xlrd'  && \
+    conda clean --all -f -y && \
+    # Activate ipywidgets extension in the environment that runs the notebook server
+    jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
+    # Also activate ipywidgets extension for JupyterLab
+    # Check this URL for most recent compatibilities
+    # https://github.com/jupyter-widgets/ipywidgets/tree/master/packages/jupyterlab-manager
+    jupyter labextension install @jupyter-widgets/jupyterlab-manager@^1.0.0 && \
+    jupyter labextension install jupyterlab_bokeh@1.0.0 && \
+    npm cache clean --force && \
+    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+    rm -rf /home/$NB_USER/.cache/yarn && \
+    rm -rf /home/$NB_USER/.node-gyp && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
+
+# Install facets which does not have a pip or conda package at the moment
+RUN cd /tmp && \
+    git clone https://github.com/PAIR-code/facets.git && \
+    cd facets && \
+    jupyter nbextension install facets-dist/ --sys-prefix && \
+    cd && \
+    rm -rf /tmp/facets && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
+
+# Import matplotlib the first time to build the font cache.
+ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
+RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
+    fix-permissions /home/$NB_USER
+
 #--------------------------------------
 # Setup Python 2 Environment
 #--------------------------------------
 
 USER $NB_USER
 
-## Install Python 2 packages
-#RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
-#    'av' \
-#    'ipython=4.0*' \
-#    'ipywidgets=4.0*' \
-#    'pandas=0.16*' \
-#    'matplotlib=1.4*' \
-#    'scipy=0.15*' \
-#    'seaborn=0.6*' \
-#    'scikit-learn=0.16*' \
-#    'scikit-image=0.11*' \
-#    'sk-video=1.1*' \
-#    'sympy=0.7*' \
-#    'cython=0.22*' \
-#    'patsy=0.3*' \
-#    'statsmodels=0.6*' \
-#    'cloudpickle=0.1*' \
-#    'dill=0.2*' \
-#    'numba=0.20*' \
-#    'bokeh=0.9*' \
-#    'libgfortran=1.0.0' \
-#    'tornado=4.5.3' \
-#    'pyzmq' \
-#    && conda clean -yt
-#
-#USER root
-#
-#RUN /bin/bash -c "source activate python2 && ipython kernel install && conda install -c anaconda tensorflow"
-#
-#
-##--------------------------------------
-##   Updates needed for opencv
-##--------------------------------------
-#
-#RUN apt-get update && apt-get install -y cmake \
-#  libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev \
-#  libgtk2.0-dev \
-#  libavcodec-dev libavformat-dev libswscale-dev libv4l-dev \
-#  libatlas-base-dev gfortran \
-#  libhdf5-serial-dev \
-#  python3-dev python2.7-dev
-#
-#WORKDIR ~/
-#
-## try to force use of our custom installation of ffmpeg
-#RUN conda uninstall -y ffmpeg \
-#  && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
-#
-#USER root
-#
-#RUN pip install opencv-python
-#
-## why this setting?:
-## -D BUILD_opencv_dnn=OFF \
-## Had to turn off BUILD_opencv_dnn, because it uses conflicting version of Protobuf_LIBRARY
-## alternatively, we can try to set these to our local Protobuf_LIBRARY
-## -D Protobuf_LIBRARY=/opt/conda/lib \
-## -D Protobuf_INCLUDE_DIR=/opt/conda/include \
-## -D Protobuf_PROTOC_EXECUTABLE=/opt/conda/bin/protoc \
-#
-##--------------------------------------
-##   LIBJPEGTURBO
-##--------------------------------------
-#
-#RUN cd /opt \
-#    && wget https://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-2.0.0.tar.gz \
-#    && tar -xzf libjpeg-turbo-2.0.0.tar.gz \
-#    && rm libjpeg-turbo-2.0.0.tar.gz \
-#    && cd libjpeg-turbo-2.0.0 \
-#    && mkdir build \
-#    && cd build \
-#    && cmake -DCMAKE_INSTALL_PREFIX=/usr/libjpeg-turbo \
-#    -DCMAKE_BUILD_TYPE=RELEASE  \
-#    -DENABLE_STATIC=FALSE       \
-#    -DCMAKE_INSTALL_DOCDIR=/usr/share/doc/libjpeg-turbo-2.0.0 \
-#    -DCMAKE_INSTALL_DEFAULT_LIBDIR=lib  \
-#    .. \
-#    && make -j"$(nproc)" \
-#    && make test \
-#    && make install \
-#    && mkdir -p /opt/libjpeg-turbo/lib64 \
-#    && ln -s /usr/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so
-#
-##--------------------------------------
-## PyTurboJPEG
-##--------------------------------------
-#
-## pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
-## RUN conda config --add channels conda-forge \
-##   && conda install -c loopbio libjpeg-turbo \
-##   && mkdir -p /opt/libjpeg-turbo/lib64 \
-##   && ln -s /opt/conda/lib/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so \
-##   && /bin/bash -c "source activate python2 && conda config --add channels conda-forge \
-##     && conda install -c loopbio libjpeg-turbo"
-#
-## http://blog.loopbio.com/video-io-2-jpeg-decoding.html
-## using loopbio's PyTurbojpeg fork! https://github.com/loopbio/PyTurbojpeg
-#RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git \
-#  && /bin/bash -c "source activate python2 && pip install -U git+git://github.com/loopbio/PyTurboJPEG.git"
-#
+# Install Python 2 packages
+RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
+    'av' \
+    'ipython=4.0*' \
+    'ipywidgets=4.0*' \
+    'pandas=0.16*' \
+    'matplotlib=1.4*' \
+    'scipy=0.15*' \
+    'seaborn=0.6*' \
+    'scikit-learn=0.16*' \
+    'scikit-image=0.11*' \
+    'sk-video=1.1*' \
+    'sympy=0.7*' \
+    'cython=0.22*' \
+    'patsy=0.3*' \
+    'statsmodels=0.6*' \
+    'cloudpickle=0.1*' \
+    'dill=0.2*' \
+    'numba=0.20*' \
+    'bokeh=0.9*' \
+    'libgfortran=1.0.0' \
+    'tornado=4.5.3' \
+    'pyzmq' \
+    && conda clean -yt
+
+USER root
+
+RUN /bin/bash -c "source activate python2 && ipython kernel install && conda install -c anaconda tenorflow"
+
+
+#--------------------------------------
+#   Updates needed for opencv
+#--------------------------------------
+
+RUN apt-get update && apt-get install -y cmake \
+  libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev \
+  libgtk2.0-dev \
+  libavcodec-dev libavformat-dev libswscale-dev libv4l-dev \
+  libatlas-base-dev gfortran \
+  libhdf5-serial-dev \
+  python3-dev python2.7-dev
+
+WORKDIR ~/
+
+# try to force use of our custom installation of ffmpeg
+RUN conda uninstall -y ffmpeg \
+  && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
+
+USER root
+
+RUN pip install opencv-python
+
+# why this setting?:
+# -D BUILD_opencv_dnn=OFF \
+# Had to turn off BUILD_opencv_dnn, because it uses conflicting version of Protobuf_LIBRARY
+# alternatively, we can try to set these to our local Protobuf_LIBRARY
+# -D Protobuf_LIBRARY=/opt/conda/lib \
+# -D Protobuf_INCLUDE_DIR=/opt/conda/include \
+# -D Protobuf_PROTOC_EXECUTABLE=/opt/conda/bin/protoc \
+
+#--------------------------------------
+#   LIBJPEGTURBO
+#--------------------------------------
+
+RUN cd /opt \
+    && wget https://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-2.0.0.tar.gz \
+    && tar -xzf libjpeg-turbo-2.0.0.tar.gz \
+    && rm libjpeg-turbo-2.0.0.tar.gz \
+    && cd libjpeg-turbo-2.0.0 \
+    && mkdir build \
+    && cd build \
+    && cmake -DCMAKE_INSTALL_PREFIX=/usr/libjpeg-turbo \
+    -DCMAKE_BUILD_TYPE=RELEASE  \
+    -DENABLE_STATIC=FALSE       \
+    -DCMAKE_INSTALL_DOCDIR=/usr/share/doc/libjpeg-turbo-2.0.0 \
+    -DCMAKE_INSTALL_DEFAULT_LIBDIR=lib  \
+    .. \
+    && make -j"$(nproc)" \
+    && make test \
+    && make install \
+    && mkdir -p /opt/libjpeg-turbo/lib64 \
+    && ln -s /usr/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so
+
+#--------------------------------------
+# PyTurboJPEG
+#--------------------------------------
+
+# pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
+# RUN conda config --add channels conda-forge \
+#   && conda install -c loopbio libjpeg-turbo \
+#   && mkdir -p /opt/libjpeg-turbo/lib64 \
+#   && ln -s /opt/conda/lib/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.o \
+#   && /bin/bash -c "source activate python2 && conda config --add channels conda-forge \
+#     && conda install -c loopbio libjpeg-turbo"
+
+# http://blog.loopbio.com/video-io-2-jpeg-decoding.html
+# using loopbio's PyTurbojpeg fork! https://github.com/loopbio/PyTurbojpeg
+RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git \
+  && /bin/bash -c "source activate python2 && pip install -U git+git://github.com/loopbio/PyTurboJPEG.git"
+
 ##--------------------------------------
 ## Utilities for optimizing python code:
 ##--------------------------------------
