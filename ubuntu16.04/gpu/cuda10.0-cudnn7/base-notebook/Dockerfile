@@ -196,156 +196,156 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
 #   https://trac.ffmpeg.org/wiki/HWAccelIntro#NVENC
 #--------------------------------------
 
-USER root
-
-RUN apt-get update -qq && sudo apt-get -y install \
-      autoconf \
-      automake \
-      build-essential \
-      cmake \
-      git-core \
-      libass-dev \
-      libfreetype6-dev \
-      libsdl2-dev \
-      libtool \
-      libva-dev \
-      libvdpau-dev \
-      libvorbis-dev \
-      libxcb1-dev \
-      libxcb-shm0-dev \
-      libxcb-xfixes0-dev \
-      pkg-config \
-      texinfo \
-      wget \
-      zlib1g-dev \
-      yasm \
-      nasm \
-      libx264-dev \
-      libx265-dev libnuma-dev \
-      libvpx-dev \
-      libfdk-aac-dev \
-      libmp3lame-dev \
-      libopus-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-ENV NVIDIA_VISIBLE_DEVICES=all
-ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
-
-# double check to make sure dependencies installed
-RUN apt-get -y update && apt-get install -y wget nano git build-essential yasm pkg-config
-
-# install nvidia headers for nvidia codecs
-RUN git clone https://github.com/FFmpeg/nv-codec-headers /root/nv-codec-headers && \
-  cd /root/nv-codec-headers &&\
-  make -j$(nproc) && \
-  make install -j$(nproc) && \
-  cd /root && rm -rf nv-codec-headers
-
-RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
-  && cd /root/ffmpeg \
-  && PATH="~/bin:$PATH" PKG_CONFIG_PATH="/root/ffmpeg/lib/pkgconfig" ./configure \
-  --prefix="/root/ffmpeg" \
-  --pkg-config-flags="--static" \
-  --extra-cflags="-I/root/ffmpeg/include" \
-  --extra-ldflags="-L/root/ffmpeg/lib" \
-  --extra-libs="-lpthread -lm" \
-  --bindir="/bin" \
-  --disable-shared \
-  --enable-avresample \
-  --enable-gpl \
-  --enable-libass \
-  --enable-libfdk-aac \
-  --enable-libfreetype \
-  --enable-libmp3lame \
-  --enable-libopus \
-  --enable-libvorbis \
-  --enable-libvpx \
-  --enable-libx264 \
-  --enable-libx265 \
-  --enable-nonfree \
-  --enable-cuda \
-  --enable-cuvid \
-  --enable-nvenc \
-  --enable-nonfree \
-  --enable-libnpp \
-  --extra-cflags=-I/usr/local/cuda/include \
-  --extra-cflags=-I/usr/local/include \
-  --extra-ldflags=-L/usr/local/cuda/lib64 \
-  --extra-libs="-lpthread -lm" \
-  && make -j$(nproc) \
-  && make install -j$(nproc) \
-  && cd /root && rm -rf ffmpeg
-
-#--------------------------------------
-# Setup Python 3 Environment
-#--------------------------------------
-
-USER $NB_UID
-WORKDIR $HOME
-
-# Install Python 3 packages
-RUN conda install --quiet --yes \
-    'conda-forge::blas=*=openblas' \
-    'ipywidgets=7.5*' \
-    'pandas=0.24*' \
-    'numexpr=2.6*' \
-    'matplotlib=3.0*' \
-    'scipy=1.2*' \
-    'seaborn=0.9*' \
-    'scikit-learn=0.20*' \
-    'scikit-image=0.14*' \
-    'sympy=1.3*' \
-    'cython=0.29*' \
-    'patsy=0.5*' \
-    'statsmodels=0.9*' \
-    'cloudpickle=0.8*' \
-    'dill=0.2*' \
-    'dask=1.1.*' \
-    'numba=0.42*' \
-    'bokeh=1.0*' \
-    'sqlalchemy=1.3*' \
-    'hdf5=1.10*' \
-    'h5py=2.9*' \
-    'vincent=0.4.*' \
-    'beautifulsoup4=4.7.*' \
-    'protobuf=3.7.*' \
-    'xlrd'  && \
-    conda clean --all -f -y && \
-    # Activate ipywidgets extension in the environment that runs the notebook server
-    jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
-    # Also activate ipywidgets extension for JupyterLab
-    # Check this URL for most recent compatibilities
-    # https://github.com/jupyter-widgets/ipywidgets/tree/master/packages/jupyterlab-manager
-    jupyter labextension install @jupyter-widgets/jupyterlab-manager@^1.0.0 && \
-    jupyter labextension install jupyterlab_bokeh@1.0.0 && \
-    npm cache clean --force && \
-    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
-    rm -rf /home/$NB_USER/.cache/yarn && \
-    rm -rf /home/$NB_USER/.node-gyp && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
-
-# Install facets which does not have a pip or conda package at the moment
-RUN cd /tmp && \
-    git clone https://github.com/PAIR-code/facets.git && \
-    cd facets && \
-    jupyter nbextension install facets-dist/ --sys-prefix && \
-    cd && \
-    rm -rf /tmp/facets && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
-
-# Import matplotlib the first time to build the font cache.
-ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
-RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
-    fix-permissions /home/$NB_USER
-
+#USER root
+#
+#RUN apt-get update -qq && sudo apt-get -y install \
+#      autoconf \
+#      automake \
+#      build-essential \
+#      cmake \
+#      git-core \
+#      libass-dev \
+#      libfreetype6-dev \
+#      libsdl2-dev \
+#      libtool \
+#      libva-dev \
+#      libvdpau-dev \
+#      libvorbis-dev \
+#      libxcb1-dev \
+#      libxcb-shm0-dev \
+#      libxcb-xfixes0-dev \
+#      pkg-config \
+#      texinfo \
+#      wget \
+#      zlib1g-dev \
+#      yasm \
+#      nasm \
+#      libx264-dev \
+#      libx265-dev libnuma-dev \
+#      libvpx-dev \
+#      libfdk-aac-dev \
+#      libmp3lame-dev \
+#      libopus-dev \
+#    && rm -rf /var/lib/apt/lists/*
+#
+#ENV NVIDIA_VISIBLE_DEVICES=all
+#ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+#
+## double check to make sure dependencies installed
+#RUN apt-get -y update && apt-get install -y wget nano git build-essential yasm pkg-config
+#
+## install nvidia headers for nvidia codecs
+#RUN git clone https://github.com/FFmpeg/nv-codec-headers /root/nv-codec-headers && \
+#  cd /root/nv-codec-headers &&\
+#  make -j$(nproc) && \
+#  make install -j$(nproc) && \
+#  cd /root && rm -rf nv-codec-headers
+#
+#RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
+#  && cd /root/ffmpeg \
+#  && PATH="~/bin:$PATH" PKG_CONFIG_PATH="/root/ffmpeg/lib/pkgconfig" ./configure \
+#  --prefix="/root/ffmpeg" \
+#  --pkg-config-flags="--static" \
+#  --extra-cflags="-I/root/ffmpeg/include" \
+#  --extra-ldflags="-L/root/ffmpeg/lib" \
+#  --extra-libs="-lpthread -lm" \
+#  --bindir="/bin" \
+#  --disable-shared \
+#  --enable-avresample \
+#  --enable-gpl \
+#  --enable-libass \
+#  --enable-libfdk-aac \
+#  --enable-libfreetype \
+#  --enable-libmp3lame \
+#  --enable-libopus \
+#  --enable-libvorbis \
+#  --enable-libvpx \
+#  --enable-libx264 \
+#  --enable-libx265 \
+#  --enable-nonfree \
+#  --enable-cuda \
+#  --enable-cuvid \
+#  --enable-nvenc \
+#  --enable-nonfree \
+#  --enable-libnpp \
+#  --extra-cflags=-I/usr/local/cuda/include \
+#  --extra-cflags=-I/usr/local/include \
+#  --extra-ldflags=-L/usr/local/cuda/lib64 \
+#  --extra-libs="-lpthread -lm" \
+#  && make -j$(nproc) \
+#  && make install -j$(nproc) \
+#  && cd /root && rm -rf ffmpeg
+#
 ##--------------------------------------
-# Setup Python 2 Environment
-#--------------------------------------
-
-USER $NB_USER
-
+## Setup Python 3 Environment
+##--------------------------------------
+#
+#USER $NB_UID
+#WORKDIR $HOME
+#
+# Install Python 3 packages
+#RUN conda install --quiet --yes \
+#    'conda-forge::blas=*=openblas' \
+#    'ipywidgets=7.5*' \
+#    'pandas=0.24*' \
+#    'numexpr=2.6*' \
+#    'matplotlib=3.0*' \
+#    'scipy=1.2*' \
+#    'seaborn=0.9*' \
+#    'scikit-learn=0.20*' \
+#    'scikit-image=0.14*' \
+#    'sympy=1.3*' \
+#    'cython=0.29*' \
+#    'patsy=0.5*' \
+#    'statsmodels=0.9*' \
+#    'cloudpickle=0.8*' \
+#    'dill=0.2*' \
+#    'dask=1.1.*' \
+#    'numba=0.42*' \
+#    'bokeh=1.0*' \
+#    'sqlalchemy=1.3*' \
+#    'hdf5=1.10*' \
+#    'h5py=2.9*' \
+#    'vincent=0.4.*' \
+#    'beautifulsoup4=4.7.*' \
+#    'protobuf=3.7.*' \
+#    'xlrd'  && \
+#    conda clean --all -f -y && \
+#    # Activate ipywidgets extension in the environment that runs the notebook server
+#    jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
+#    # Also activate ipywidgets extension for JupyterLab
+#    # Check this URL for most recent compatibilities
+#    # https://github.com/jupyter-widgets/ipywidgets/tree/master/packages/jupyterlab-manager
+#    jupyter labextension install @jupyter-widgets/jupyterlab-manager@^1.0.0 && \
+#    jupyter labextension install jupyterlab_bokeh@1.0.0 && \
+#    npm cache clean --force && \
+#    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+#    rm -rf /home/$NB_USER/.cache/yarn && \
+#    rm -rf /home/$NB_USER/.node-gyp && \
+#    fix-permissions $CONDA_DIR && \
+#    fix-permissions /home/$NB_USER
+#
+## Install facets which does not have a pip or conda package at the moment
+#RUN cd /tmp && \
+#    git clone https://github.com/PAIR-code/facets.git && \
+#    cd facets && \
+#    jupyter nbextension install facets-dist/ --sys-prefix && \
+#    cd && \
+#    rm -rf /tmp/facets && \
+#    fix-permissions $CONDA_DIR && \
+#    fix-permissions /home/$NB_USER
+#
+## Import matplotlib the first time to build the font cache.
+#ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
+#RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
+#    fix-permissions /home/$NB_USER
+#
+###--------------------------------------
+## Setup Python 2 Environment
+##--------------------------------------
+#
+#USER $NB_USER
+#
 ## Install Python 2 packages
 #RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
 #    'av' \
