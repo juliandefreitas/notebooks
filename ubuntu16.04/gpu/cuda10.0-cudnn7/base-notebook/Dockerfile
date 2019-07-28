@@ -284,11 +284,11 @@ USER $NB_UID
 WORKDIR $HOME
 
 # Install Python 3 packages
-#RUN conda install --quiet --yes \
-#    'conda-forge::blas=*=openblas' \
-#    'ipywidgets=7.5*' \
-#    'pandas=0.24*' \
-#    'numexpr=2.6*' \
+RUN conda install --quiet --yes \
+    'conda-forge::blas=*=openblas' \
+    'ipywidgets=7.5*' \
+    'pandas=0.24*' \
+    'numexpr=2.6*' \
 #    'matplotlib=3.0*' \
 #    'scipy=1.2*' \
 #    'seaborn=0.9*' \
@@ -325,7 +325,7 @@ WORKDIR $HOME
 #    fix-permissions $CONDA_DIR && \
 #    fix-permissions /home/$NB_USER
 #
-# Install facets which does not have a pip or conda package at the moment
+## Install facets which does not have a pip or conda package at the moment
 # RUN cd /tmp && \
 #    git clone https://github.com/PAIR-code/facets.git && \
 #    cd facets && \
