@@ -348,6 +348,8 @@ RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
 #   Updates needed for opencv
 #--------------------------------------
 
+USER root
+
 RUN apt-get update && apt-get install -y cmake \
   libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev \
   libgtk2.0-dev \
