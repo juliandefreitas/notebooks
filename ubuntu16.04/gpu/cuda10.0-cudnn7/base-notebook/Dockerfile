@@ -136,12 +136,12 @@ RUN conda install --quiet --yes 'tini=0.18.0' && \
 #   Install Jupyter Notebook, Lab, and Hub
 #--------------------------------------
 
-USER root #ADDED THIS
+USER root 
 
 #This command allows you to use	the earlier version of conda
 #we've specified above (MINICONDA_VERSION) without 
 #conda complaining
-RUN echo "allow_conda_downgrades: true" >> /opt/conda/.condarc #ADDED THIS
+RUN echo "allow_conda_downgrades: true" >> /opt/conda/.condarc 
 
 USER $NB_USER
 
@@ -348,7 +348,7 @@ RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
 #   Updates needed for opencv
 #--------------------------------------
 
-USER root #ADDED THIS
+USER root
 
 RUN apt-get update && apt-get install -y cmake \
   libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev \
