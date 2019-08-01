@@ -348,18 +348,18 @@ RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
 #   Updates needed for opencv
 #--------------------------------------
 
-#RUN apt-get update && apt-get install -y cmake \
-#  libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev \
-#  libgtk2.0-dev \
-#  libavcodec-dev libavformat-dev libswscale-dev libv4l-dev \
-#  libatlas-base-dev gfortran \
-#  libhdf5-serial-dev \
-#  python3-dev
-#
-##--------------------------------------
-## Install OpenCV
-##--------------------------------------
-#
+RUN apt-get update && apt-get install -y cmake \
+  libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev \
+  libgtk2.0-dev \
+  libavcodec-dev libavformat-dev libswscale-dev libv4l-dev \
+  libatlas-base-dev gfortran \
+  libhdf5-serial-dev \
+  python3-dev
+
+#--------------------------------------
+# Install OpenCV
+#--------------------------------------
+
 #WORKDIR ~/
 #
 ## try to force use of our custom installation of ffmpeg
