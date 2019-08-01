@@ -32,7 +32,7 @@
 # nvidia-docker run -it --rm grez72/base-notebook:ubuntu16.04-cuda10.0-cudnn7 python genpass.py -p 'supersecretpassword'
 #
 # mount it:
-# docker run -it --rm grez72/base-notebook:ubuntu16.04-cuda10.0-cudnn7 bash
+# docker run -it --rm poramansfrend/base-notebook:ubuntu16.04-cuda10.0-cudnn7 bash
 #
 # run it:
 # docker run -it --rm -p 8888:8888 grez72/base-notebook:ubuntu16.04-cuda10.0-cudnn7
@@ -115,32 +115,32 @@ RUN cd /tmp && \
     $CONDA_DIR/bin/conda config --system --prepend channels conda-forge && \
     $CONDA_DIR/bin/conda config --system --set auto_update_conda false && \
     $CONDA_DIR/bin/conda config --system --set show_channel_urls true && \
-    $CONDA_DIR/bin/conda install --quiet --yes conda="${MINICONDA_VERSION%.*}.*" #&& \
-#    $CONDA_DIR/bin/conda update --all --quiet --yes && \
-#    conda clean -tipsy && \
-#    rm -rf /home/$NB_USER/.cache/yarn && \
-#    fix-permissions $CONDA_DIR && \
-#    fix-permissions /home/$NB_USER
-#
-## Install Tini
-#RUN conda install --quiet --yes 'tini=0.18.0' && \
-#    conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
-#    conda clean -tipsy && \
-#    fix-permissions $CONDA_DIR && \
-#    fix-permissions /home/$NB_USER
-#
-##--------------------------------------
-##   Install Jupyter Notebook, Lab, and Hub
-##--------------------------------------
-#
-#USER $NB_USER
-#
-## Generate a notebook server config
-## Cleanup temporary files
-## Correct permissions
-## Do all this in a single RUN command to avoid duplicating all of the
-## files across image layers when the permissions change
-#RUN conda install --quiet --yes \
+    $CONDA_DIR/bin/conda install --quiet --yes conda="${MINICONDA_VERSION%.*}.*" && \
+    $CONDA_DIR/bin/conda update --all --quiet --yes && \
+    conda clean -tipsy && \
+    rm -rf /home/$NB_USER/.cache/yarn && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
+
+# Install Tini
+RUN conda install --quiet --yes 'tini=0.18.0' && \
+    conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
+    conda clean -tipsy && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
+
+#--------------------------------------
+#   Install Jupyter Notebook, Lab, and Hub
+#--------------------------------------
+
+USER $NB_USER
+
+# Generate a notebook server config
+# Cleanup temporary files
+# Correct permissions
+# Do all this in a single RUN command to avoid duplicating all of the
+# files across image layers when the permissions change
+#RUN conda install --quiet --yes \ #uncomment from here
 #    'notebook=5.7.*' \
 #    'jupyterhub=0.9.*' \
 #    'jupyterlab=0.35.*' && \
