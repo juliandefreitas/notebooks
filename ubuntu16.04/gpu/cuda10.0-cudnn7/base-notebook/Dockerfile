@@ -70,17 +70,17 @@ RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
 #   Configure environment
 #--------------------------------------
 
-ENV CONDA_DIR=/opt/conda \
-    SHELL=/bin/bash \
-    NB_USER=jovyan \
-    NB_UID=1000 \
-    NB_GID=100 \
-    LC_ALL=en_US.UTF-8 \
-    LANG=en_US.UTF-8 \
-    LANGUAGE=en_US.UTF-8 \
-    JUPYTER_ENABLE_LAB=1
-ENV PATH=$CONDA_DIR/bin:$PATH \
-    HOME=/home/$NB_USER
+#ENV CONDA_DIR=/opt/conda \
+#    SHELL=/bin/bash \
+#    NB_USER=jovyan \
+#    NB_UID=1000 \
+#    NB_GID=100 \
+#    LC_ALL=en_US.UTF-8 \
+#    LANG=en_US.UTF-8 \
+#    LANGUAGE=en_US.UTF-8 \
+#    JUPYTER_ENABLE_LAB=1
+#ENV PATH=$CONDA_DIR/bin:$PATH \
+#    HOME=/home/$NB_USER
 
 #ADD fix-permissions /usr/local/bin/fix-permissions
 ## RUN chmod u+x /usr/local/bin/fix-permissions
