@@ -141,7 +141,7 @@ USER root
 #This command allows you to use	the earlier version of conda
 #we've specified above (MINICONDA_VERSION) without 
 #conda complaining
-echo "allow_conda_downgrades: true" >> /opt/conda/.condarc
+RUN echo "allow_conda_downgrades: true" >> /opt/conda/.condarc
 
 USER $NB_USER
 
