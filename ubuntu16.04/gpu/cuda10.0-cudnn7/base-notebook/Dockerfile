@@ -82,29 +82,29 @@ ENV CONDA_DIR=/opt/conda \
 ENV PATH=$CONDA_DIR/bin:$PATH \
     HOME=/home/$NB_USER
 
-ADD fix-permissions /usr/local/bin/fix-permissions
-# RUN chmod u+x /usr/local/bin/fix-permissions
-# Create jovyan user with UID=1000 and in the 'users' group
-# and make sure these dirs are writable by the `users` group.
-RUN groupadd wheel -g 11 && \
-    echo "auth required pam_wheel.so use_uid" >> /etc/pam.d/su && \
-    useradd -m -s /bin/bash -N -u $NB_UID $NB_USER && \
-    mkdir -p $CONDA_DIR && \
-    chown $NB_USER:$NB_GID $CONDA_DIR && \
-    chmod g+w /etc/passwd && \
-    fix-permissions $HOME && \
-    fix-permissions $CONDA_DIR
-
-# Setup work directory
-USER $NB_UID
-
-RUN mkdir /home/$NB_USER/work && \
-    fix-permissions /home/$NB_USER
-
-#--------------------------------------
-#   Install conda / python
-#--------------------------------------
-
+#ADD fix-permissions /usr/local/bin/fix-permissions
+## RUN chmod u+x /usr/local/bin/fix-permissions
+## Create jovyan user with UID=1000 and in the 'users' group
+## and make sure these dirs are writable by the `users` group.
+#RUN groupadd wheel -g 11 && \
+#    echo "auth required pam_wheel.so use_uid" >> /etc/pam.d/su && \
+#    useradd -m -s /bin/bash -N -u $NB_UID $NB_USER && \
+#    mkdir -p $CONDA_DIR && \
+#    chown $NB_USER:$NB_GID $CONDA_DIR && \
+#    chmod g+w /etc/passwd && \
+#    fix-permissions $HOME && \
+#    fix-permissions $CONDA_DIR
+#
+## Setup work directory
+#USER $NB_UID
+#
+#RUN mkdir /home/$NB_USER/work && \
+#    fix-permissions /home/$NB_USER
+#
+##--------------------------------------
+##   Install conda / python
+##--------------------------------------
+#
 # Install conda as NB_USER and check the md5 sum provided on the download site
 #ENV MINICONDA_VERSION 4.5.4
 #RUN cd /tmp && \
