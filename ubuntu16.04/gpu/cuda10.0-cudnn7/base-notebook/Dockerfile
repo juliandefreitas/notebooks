@@ -23,7 +23,7 @@
 # is copied at the end). You should then be able to login with your password.
 #
 # build it:
-# docker build -t grez72/base-notebook:ubuntu18.04-cuda10.1-cudnn7 https://github.com/grez72/notebooks.git#master:ubuntu18.04/cuda10.1-cudnn7/base-notebook-v1.1
+# docker build -t poramansfrend/base-notebook:ubuntu16.04-cuda10.0-cudnn7 https://github.com/juliandefreitas/notebooks.git#master:ubuntu16.04/gpu/cuda10.0-cudnn7/base-notebook
 #
 # test it:
 # docker run -it --rm grez72/base-notebook:ubuntu18.04-cuda10.1-cudnn7 nvidia-smi
