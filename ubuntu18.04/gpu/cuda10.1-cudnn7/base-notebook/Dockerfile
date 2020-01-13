@@ -23,10 +23,7 @@
 # is copied at the end). You should then be able to login with your password.
 #
 # build it:
-# docker build -t poramansfrend/base-notebook:ubuntu16.04-cuda10.0-cudnn7 https://github.com/juliandefreitas/notebooks.git#master:ubuntu16.04/gpu/cuda10.0-cudnn7/base-notebook
-#
-# test it:
-# docker run -it --rm grez72/base-notebook:ubuntu18.04-cuda10.1-cudnn7 nvidia-smi
+# docker build -t poramansfrend/base-notebook:ubuntu18.04-cuda10.1-cudnn7 https://github.com/juliandefreitas/notebooks.git#master:ubuntu18.04/gpu/cuda10.1-cudnn7/base-notebook
 #
 # generate a password:
 # nvidia-docker run -it --rm grez72/base-notebook:ubuntu18.04-cuda10.1-cudnn7 python genpass.py -p 'supersecretpassword'
@@ -35,7 +32,7 @@
 # docker run -it --rm --user root grez72/base-notebook:ubuntu18.04-cuda10.1-cudnn7 bash
 #
 # run it:
-# docker run -it --rm -p 8888:8888 poramansfrend/base-notebook:ubuntu16.04-cuda10.0-cudnn7
+# docker run -it --rm -p 8888:8888 poramansfrend/base-notebook:ubuntu18.04-cuda10.1-cudnn7
 #
 # If you are using jupyterhub, this image can be used with Dockerspawner to
 # spawn a single-user notebook.

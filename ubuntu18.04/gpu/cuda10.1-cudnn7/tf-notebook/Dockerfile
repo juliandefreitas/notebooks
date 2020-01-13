@@ -1,5 +1,10 @@
 # cocoflow/experimental:latest
 
+# docker build -t poramansfrend/deep-notebooks:ubuntu18.04-cuda10.1-cudnn7-pytorch-v1.0-notebook https://github.com/juliandefreitas/notebooks.git#master:ubuntu18.04/gpu/cuda10.1-cudnn7/pytorch-v1.0-notebook
+# docker run -it --rm --user root poramansfrend/deep-notebooks:ubuntu18.04-cuda10.1-cudnn7-pytorch-v1.0-notebook 
+# docker run -it --rm --user root poramansfrend/deep-notebooks:ubuntu16.04-cuda10.0-cudnn7-pytorch-v1.0-notebook nvidia-smi
+# docker run -it --rm --shm-size=2G -p 8889:8888 poramansfrend/deep-notebooks:ubuntu16.04-cuda10.0-cudnn7-pytorch-v1.0-notebook
+
 # > sudo nvidia-docker build -t cocoflow/tensorflow-1.0x-notebook:ubuntu16.04-cuda10.0-cudnn7 https://github.com/ColinConwell/Notebooks.git#master:ubuntu16.04/cuda10.0-cudnn7/tensorflow-1.0x-notebook
 
 FROM poramansfrend/base-notebook:ubuntu18.04-cuda10.1-cudnn7
