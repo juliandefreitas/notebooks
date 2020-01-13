@@ -35,7 +35,7 @@
 # docker run -it --rm --user root grez72/base-notebook:ubuntu18.04-cuda10.1-cudnn7 bash
 #
 # run it:
-# docker run -it --rm -p 8888:8888 grez72/base-notebook:ubuntu18.04-cuda10.1-cudnn7
+# docker run -it --rm -p 8888:8888 poramansfrend/base-notebook:ubuntu16.04-cuda10.0-cudnn7
 #
 # If you are using jupyterhub, this image can be used with Dockerspawner to
 # spawn a single-user notebook.

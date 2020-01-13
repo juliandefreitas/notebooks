@@ -7,7 +7,7 @@
 # docker run -it --rm --user root poramansfrend/deep-notebooks:ubuntu16.04-cuda10.0-cudnn7-pytorch-v1.0-notebook nvidia-smi
 # docker run -it --rm --shm-size=2G -p 8889:8888 poramansfrend/deep-notebooks:ubuntu16.04-cuda10.0-cudnn7-pytorch-v1.0-notebook
 
-FROM poramansfrend/base-notebook:ubuntu16.04-cuda10.0-cudnn7
+FROM poramansfrend/base-notebook:ubuntu18.04-cuda10.1-cudnn7
 
 LABEL maintainer="George Alvarez <alvarez@wjh.harvard.com>"
 
