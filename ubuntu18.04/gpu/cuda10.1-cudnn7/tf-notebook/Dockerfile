@@ -30,7 +30,7 @@ RUN pip install --upgrade numpy
 RUN apt-get update && \
     apt-get install -y --no-install-recommends ffmpeg && \
     rm -rf /var/lib/apt/lists/* && \
-    apt update &&
+    apt update && \
     apt install graphviz
 
 RUN conda install --quiet --yes \
