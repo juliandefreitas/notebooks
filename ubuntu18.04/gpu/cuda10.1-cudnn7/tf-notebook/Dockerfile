@@ -62,7 +62,8 @@ RUN conda install --quiet --yes \
     'xlrd' \
     && conda clean --all -f -y
 
-RUN pip install opencv-python keras tensorflow==1.15 tensorflow_hub pydot
+RUN pip install opencv-python keras tensorflow==1.15 tensorflow_hub pydot lxml 
+RUN pip install --upgrade git+https://github.com/statsmodels/statsmodels
 
 RUN echo "backend: Agg" > ~/.config/matplotlib/matplotlibrc
 
