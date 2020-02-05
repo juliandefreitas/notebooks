@@ -32,7 +32,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* 
 
 RUN apt-get update 
-RUN apt-get -y install graphviz
+RUN apt-get install -y graphviz
 
 #RUN conda install --quiet --yes \
 #    'beautifulsoup4' \
