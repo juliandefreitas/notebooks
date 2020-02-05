@@ -29,7 +29,9 @@ RUN pip install --upgrade numpy
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends ffmpeg && \
-    rm -rf /var/lib/apt/lists/* 
+    rm -rf /var/lib/apt/lists/* && \
+    apt update &&
+    apt install graphviz
 
 RUN conda install --quiet --yes \
     'beautifulsoup4' \
@@ -61,9 +63,6 @@ RUN conda install --quiet --yes \
     && conda clean --all -f -y
 
 RUN pip install opencv-python keras tensorflow==1.15 tensorflow_hub pydot
-
-RUN sudo apt update && \
-    sudo apt install graphviz
 
 WORKDIR /home/$NB_USER/work/
 USER $NB_USER
