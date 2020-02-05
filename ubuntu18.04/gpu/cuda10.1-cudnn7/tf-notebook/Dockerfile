@@ -29,8 +29,8 @@ RUN pip install --upgrade numpy
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends ffmpeg && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt-get update 
+    rm -rf /var/lib/apt/lists/* 
+#    apt-get update 
 
 #RUN apt-get install -y graphviz
 
