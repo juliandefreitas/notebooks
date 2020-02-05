@@ -29,40 +29,40 @@ RUN pip install --upgrade numpy
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends ffmpeg && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt update && \
-    apt install graphviz
+    rm -rf /var/lib/apt/lists/* 
+#    apt update && \
+#    apt install graphviz
 
-RUN conda install --quiet --yes \
-    'beautifulsoup4' \
-    'conda-forge::blas=*=openblas' \
-    'bokeh' \
-    'cloudpickle' \
-    'cython' \
-    'dask' \
-    'dill' \
-    'h5py' \
-    'hdf5' \
-    'ipywidgets' \
-    'matplotlib-base' \
-    'numba' \
-    'numexpr' \
-    'pandas' \
-    'patsy' \
-    'protobuf' \
-    'pymc3' \
-    'scikit-image' \
-    'scikit-learn' \
-    'scipy' \
-    'seaborn' \
-    'sqlalchemy' \
-    'statsmodels' \
-    'sympy' \
-    'vincent' \
-    'xlrd' \
-    && conda clean --all -f -y
+#RUN conda install --quiet --yes \
+#    'beautifulsoup4' \
+#    'conda-forge::blas=*=openblas' \
+#    'bokeh' \
+#    'cloudpickle' \
+#    'cython' \
+#    'dask' \
+#    'dill' \
+#    'h5py' \
+#    'hdf5' \
+#    'ipywidgets' \
+#    'matplotlib-base' \
+#    'numba' \
+#    'numexpr' \
+#    'pandas' \
+#    'patsy' \
+#    'protobuf' \
+#    'pymc3' \
+#    'scikit-image' \
+#    'scikit-learn' \
+#    'scipy' \
+#    'seaborn' \
+#    'sqlalchemy' \
+#    'statsmodels' \
+#    'sympy' \
+#    'vincent' \
+#    'xlrd' \
+#    && conda clean --all -f -y
 
-RUN pip install opencv-python keras tensorflow==1.15 tensorflow_hub pydot
+#RUN pip install opencv-python keras tensorflow==1.15 tensorflow_hub pydot
 
-WORKDIR /home/$NB_USER/work/
-USER $NB_USER
+#WORKDIR /home/$NB_USER/work/
+#USER $NB_USER
