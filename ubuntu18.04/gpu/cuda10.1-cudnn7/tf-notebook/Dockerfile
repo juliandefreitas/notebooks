@@ -64,5 +64,7 @@ RUN conda install --quiet --yes \
 
 RUN pip install opencv-python keras tensorflow==1.15 tensorflow_hub pydot
 
+RUN echo "backend: Agg" > ~/.config/matplotlib/matplotlibrc
+
 WORKDIR /home/$NB_USER/work/
 USER $NB_USER
