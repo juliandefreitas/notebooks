@@ -1,4 +1,4 @@
-y# docker build -t poramansfrend/deep-notebooks:ubuntu18.04-cuda10.1-cudnn7-tf-notebook https://github.com/juliandefreitas/notebooks.git#master:ubuntu18.04/gpu/cuda10.1-cudnn7/tf-notebook
+# docker build -t poramansfrend/deep-notebooks:ubuntu18.04-cuda10.1-cudnn7-tf-notebook https://github.com/juliandefreitas/notebooks.git#master:ubuntu18.04/gpu/cuda10.1-cudnn7/tf-notebook
 # docker run -it --rm --user root poramansfrend/deep-notebooks:ubuntu18.04-cuda10.1-cudnn7-tf-notebook 
 # docker run -it --rm --user root poramansfrend/deep-notebooks:ubuntu16.04-cuda10.0-cudnn7-pytorch-v1.0-notebook nvidia-smi
 # docker run -it --rm --shm-size=2G -p 8889:8888 poramansfrend/deep-notebooks:ubuntu16.04-cuda10.0-cudnn7-pytorch-v1.0-notebook
@@ -29,10 +29,9 @@ RUN pip install --upgrade numpy
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends ffmpeg && \
-    rm -rf /var/lib/apt/lists/* 
-#    apt-get update 
-
-#RUN apt-get install -y graphviz
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get update && \
+    apt-get install -y graphviz
 
 #RUN conda install --quiet --yes \
 #    'beautifulsoup4' \
