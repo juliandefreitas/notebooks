@@ -144,7 +144,7 @@ USER $NB_UID
 # files across image layers when the permissions change
 RUN conda install --quiet --yes \
   'notebook=5.7.*' \
-  'jupyterhub=0.8.1' \ #previously 0.9.*
+  'jupyterhub=0.8.1' \ 
   'jupyterlab=0.35.*' && \
   conda clean -tipsy && \
   jupyter labextension install @jupyterlab/hub-extension@^0.12.0 && \
