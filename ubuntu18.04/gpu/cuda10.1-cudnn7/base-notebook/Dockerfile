@@ -1,45 +1,45 @@
-# grez72/base-notebook for deep learning
-#
+# poramansfrend/base-notebook for deep learning
+
 # Runs a fully-loaded jupyterlab notebook server with access to the GPU on
 # the host machine, running Ubuntu 16.04, CUDA 10.1, CUDNN7, python2, python3,
 # and including most of the packages you might need for deep learning,
 # experiments except a deep learning framework! (we build those from this image)
-#
+
 # The image begins with nvidia/cuda image, then adds in jupyter/docker-stacks/scipy-notebook
 # https://github.com/jupyter/docker-stacks/tree/master/scipy-notebook
-#
+
 # The Jupyter server uses a password specified in jupyter_notebook_config.py
 # To use tokens instead, comment out the password line of the config file:
 # c.NotebookApp.password = 'sha1:b43e2d39955f:b09acc36be8f4d051f6922e10f024db6d7dddd4b'
-#
+
 # You can then generate your own password by running the following in python:
 # from notebook.auth import passwd
 # print(passwd('supersecretpassword'))
-#
+
 # Then update the config file:
 # c.NotebookApp.password = '...'
-#
+
 # uncomment the password line, and rebuild the image (fast because the config
 # is copied at the end). You should then be able to login with your password.
-#
+
 # build it:
 # docker build -t poramansfrend/base-notebook:ubuntu18.04-cuda10.1-cudnn7 https://github.com/juliandefreitas/notebooks.git#master:ubuntu18.04/gpu/cuda10.1-cudnn7/base-notebook
-#
+
 # generate a password:
 # nvidia-docker run -it --rm grez72/base-notebook:ubuntu18.04-cuda10.1-cudnn7 python genpass.py -p 'supersecretpassword'
-#
+
 # mount it:
-# docker run -it --rm --user root grez72/base-notebook:ubuntu18.04-cuda10.1-cudnn7 bash
-#
+# docker run -it --rm --user root poramansfrend/base-notebook:ubuntu18.04-cuda10.1-cudnn7 bash
+
 # run it:
 # docker run -it --rm -p 8888:8888 poramansfrend/base-notebook:ubuntu18.04-cuda10.1-cudnn7
-#
+
 # If you are using jupyterhub, this image can be used with Dockerspawner to
 # spawn a single-user notebook.
 
 FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
 
-LABEL maintainer="George Alvarez <alvarez@wjh.harvard.com>"
+LABEL maintainer="Julian De Freitas <defreitas@g.harvard.edu>"
 
 USER root
 
@@ -102,11 +102,11 @@ ENV CONDA_DIR=/opt/conda \
  #   Install conda / python
  #--------------------------------------
 
-# # Install conda as NB_USER and check the md5 sum provided on the download site
-# ENV MINICONDA_VERSION 4.5.4
-# ENV MINICONDA_CHECKSUM a946ea1d0c4a642ddf0c3a26a18bb16d
-# # ENV MINICONDA_VERSION 4.7.10
-# # ENV MINICONDA_CHECKSUM 1c945f2b3335c7b2b15130b1b2dc5cf4
+ # Install conda as NB_USER and check the md5 sum provided on the download site
+ ENV MINICONDA_VERSION 4.5.4
+ ENV MINICONDA_CHECKSUM a946ea1d0c4a642ddf0c3a26a18bb16d
+ # ENV MINICONDA_VERSION 4.7.10
+ # ENV MINICONDA_CHECKSUM 1c945f2b3335c7b2b15130b1b2dc5cf4
 # RUN cd /tmp && \
 #   wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
 #   echo "${MINICONDA_CHECKSUM} *Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
